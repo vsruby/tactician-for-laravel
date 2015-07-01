@@ -13,6 +13,11 @@
             "VinceRuby\\Tactician\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "VinceRuby\\Tactician\\Tests": "tests/"
+        }
+    },
     "require": {
         "php": ">=5.5.9",
         "league/tactician": "^0.6.0",
