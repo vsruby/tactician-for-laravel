@@ -5,10 +5,9 @@ namespace VinceRuby\Tactician;
 use ArrayAccess;
 use ReflectionClass;
 use ReflectionParameter;
-
 use Illuminate\Support\Collection;
-
 use League\Tactician\CommandBus;
+use VinceRuby\Tactician\Exceptions\MarshalException;
 
 class Dispatcher
 {
