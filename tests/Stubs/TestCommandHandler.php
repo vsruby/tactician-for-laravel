@@ -8,6 +8,6 @@ class TestCommandHandler
 {
 	public function handle(TestCommand $command)
 	{
-		return true;
+		return $command->data;
 	}
 }
