@@ -15,7 +15,7 @@ interface Dispatcher
      * @return mixed
      * 
      */
-    public function dispatch($command, Closure $afterResolving = null);
+    public function dispatch($command);
 
     /**
      * Marshal a command and dispatch it to its respective handler.
