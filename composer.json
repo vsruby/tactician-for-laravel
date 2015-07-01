@@ -15,7 +15,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "VinceRuby\\Tactician\\Tests": "tests/"
+            "VinceRuby\\Tactician\\Tests\\": "tests/"
         }
     },
     "require": {
