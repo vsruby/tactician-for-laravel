@@ -7,9 +7,10 @@ use ReflectionClass;
 use ReflectionParameter;
 use Illuminate\Support\Collection;
 use League\Tactician\CommandBus;
+use VinceRuby\Tactician\Contracts\Bus\Dispatcher as DispatcherContract;
 use VinceRuby\Tactician\Exceptions\MarshalException;
 
-class Dispatcher
+class Dispatcher implements DispatcherContract
 {
     /**
      * Instance for the command bus.
