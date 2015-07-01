@@ -1,0 +1,20 @@
+{
+    "name": "vinceruby/tactician-for-laravel",
+    "description": "Laravel 5+ wrapper for Tactician",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vince Ruby",
+            "email": "vsruby91@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "VinceRuby\\Tactician\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.5.9",
+        "league/tactician": "^0.6.0"
+    }
+}
