@@ -187,7 +187,21 @@ class TacticianServiceProvider extends ServiceProvider
      */
     protected function registerMiddleware()
     {
-    	
+    	$this->app->bind('tactician.middleware', function() {
+
+	    	$middleware = $this->config('middleware');
+
+	    	$resolved   = array_map(function($name) {
+
+	    		return new $name();
+
+	    	}, $middleware);
+
+	    	$resolved[] = $this->app['tactician.handler'];
+
+	    	return $resolved;
+
+	    });
     }
 
     /**
