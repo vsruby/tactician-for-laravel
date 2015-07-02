@@ -1,6 +1,7 @@
 {
     "name": "vinceruby/tactician-for-laravel",
     "description": "Laravel 5+ wrapper for Tactician",
+    "keywords": ["commandbus", "laravel", "tactician"],
     "license": "MIT",
     "authors": [
         {
