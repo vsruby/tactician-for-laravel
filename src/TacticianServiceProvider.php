@@ -7,9 +7,6 @@ use Illuminate\Support\ServiceProvider;
 
 use League\Tactician\CommandBus;
 use League\Tactician\Handler\CommandHandlerMiddleware;
-use League\Tactician\Handler\CommandNameExtractor\ClassNameExtractor;
-use League\Tactician\Handler\MethodNameInflector\HandleInflector;
-use League\Tactician\Handler\CommandHandlerMiddleware;
 
 use VinceRuby\Tactician\Contracts\Bus\Dispatcher;
 use VinceRuby\Tactician\Locator;
@@ -17,141 +14,192 @@ use VinceRuby\Tactician\Locator;
 class TacticianServiceProvider extends ServiceProvider
 {
     /**
-     * Boot service provider.
+     * Boot the service provider.
      *
      * @return void
+     * 
      */
 	public function boot()
     {
         $this->publishes([
-            __DIR__.'/../config/config.php' => config_path('tactician.php'),
+            __DIR__.'/../config/config.php' => config_path('tactician.php')
         ], 'config');
+
+        $this->bootBindings();
     }
 
     /**
-     * Register service provider.
+     * Register the service provider.
      *
      * @return void
+     * 
      */
     public function register()
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'tactician');
 
-        $this->bindDispatcher();
-        $this->registerMiddleware();
         $this->registerLocator();
+        $this->registerExtractor();
+        $this->registerInflector();
         $this->registerCommandHandler();
-        $this->resolveMiddleware();
+        $this->registerMiddleware();
         $this->registerCommandBus();
         $this->registerDispatcher();
     }
 
-    protected function bindDispatcher()
+    /**
+     * Bind some interfaces and implementations.
+     *
+     * @return void
+     * 
+     */
+    protected function bootBindings()
     {
-    	$this->app->bind('VinceRuby/Tactician/Contracts/Bus/Dispatcher', 'VinceRuby/Tactician/Dispatcher');
-    }
-
-    protected function registerCommandBus()
-    {
-        $this->app->bind('tactician.commandbus', function () {
-
-            $middleware = $this->app['tactician.middleware.resolved'];
-
-            return new CommandBus($middleware);
-        });
-    }
-
-    protected function registerCommandHandler()
-    {
-        $this->app->bind('tactician.middleware.command_handler', function () {
-
-            return new CommandHandlerMiddleware(
-                $this->app['tactician.command_name_extractor'],
-                $this->app['tactician.locator'],
-                $this->app['tactician.method_name_inflector']
-            );
-
-        });
-
-        $this->app->bind('tactician.command_name_extractor', function () {
-
-            return new ClassNameExtractor();
-
-        });
-
-        $this->app->bind('tactician.method_name_inflector', function () {
-
-            return new HandleInflector();
-
-        });
-
-    }
-
-    protected function registerDispatcher()
-    {
-        $this->app->bind('tactician.dispatcher', function () {
-
-            $bus = $this->app['tactician.commandbus'];
-
-            return new Dispatcher($bus);
-        });    	
-    }
-
-    protected function registerLocator()
-    {        
-        $this->app->bind('tactician.locator', function () {
-
-            $config            = $this->app['config'];
-            $command_namespace = $config->get('tactician.commandNamespace');
-            $handler_namespace = $config->get('tactician.handlerNamespace');
-
-            return new Locator($this->app, $command_namespace, $handler_namespace);
-        });    	
-    }
-
-    protected function registerMiddleware()
-    {
-    	//Get middleware set in config file
-    	$middlewares = $this->app['config.tactician.middleware'];
-
-    	$names = [];
-
-    	//Loop through retrieved middleware
-    	foreach ($middlewares as $middleware) {
-
-    		//Get short name of middleware class and convert to lower
-    		$short_name = strtolower(class_basename($middleware));
-
-    		//Bind middleware to name
-    		$this->app->bind($short_name, function() use($middleware) {
-    			return new '\\' . $middleware();
-    		});
-
-    		$names[] = $short_name;
-
+    	$this->app['League\Tactician\CommandBus'] = function($app) {
+    		return $app['tactician.commandbus'];
     	}
 
-    	//Add command_handler to end of middleware array
-    	$names[] = 'tactician.middleware.command_handler';
+    	$this->app['League\Tactician\Handler\CommandHandlerMiddleware'] = function($app) {
+    		return $app['tactician.handler']
+    	}
 
-    	//Bind all middleware
-    	$this->app->bind('tactician.middleware', function() {
+    	$this->app['League\Tactician\Handler\CommandNameExtractor\CommandNameExtractor'] = function($app) {
+    		return $app['tactician.extractor'];
+    	}
 
-    		return new Collection($names);
+    	$this->app['League\Tactician\Handler\MethodNameInflector\MethodNameInflector'] = function($app) {
+    		return $app['tactician.inflector'];
+    	}
+
+    	$this->app['League\Tactician\Handler\Locator\HandlerLocator'] = function($app) {
+    		return $app['tactician.locator'];
+    	}
+
+    	$this->app['VinceRuby\Tactician\Contracts\Bus\Dispatcher'] = function($app) {
+    		return $app['tactician.dispatcher'];
+    	}
+    }
+
+    /**
+     * Register bindings for the Command Handler.
+     * 
+     * @return void
+     * 
+     */
+    public function registerCommandBus()
+    {
+    	$this->app['tactician.commandbus'] = $this->app->share(function($app) {
+
+    		return new CommandBus($app['tactician.middleware']);
 
     	});
     }
 
-    protected function resolveMiddleware()
-    {    	
-        $this->app->bind('tactician.middleware.resolved', function () {
-            return array_map(function ($name) {
-                if (is_string($name)) {
-                    return $this->app[$name];
-                }
+    /**
+     * Register bindings for the Command Handler.
+     * 
+     * @return void
+     * 
+     */
+    public function registerCommandHandler()
+    {
+    	$this->app['tactician.handler'] = $this->app->share(function($app) {
 
-                return $name;
-            }, $this->app['tactician.middleware']->all());
-        });
+    		return new CommandHandlerMiddleware(
+    			$app['tactician.extractor'],
+    			$app['tactician.locator'],
+    			$app['tactician.inflector']
+    		);
+
+    	});
+    }
+
+
+    /**
+     * Register bindings for the Dispatcher.
+     * 
+     * @return void
+     * 
+     */
+    public function registerDispatcher()
+    {
+    	$this->app['tactician.dispatcher'] = $this->app->share(function($app) {
+
+    		return new Dispatcher($app['tactician.middleware']);
+
+    	});
+    }
+
+    /**
+     * Register bindings for the Command Name Extractor.
+     * 
+     * @return void
+     * 
+     */
+    protected function registerExtractor()
+    {
+    	$this->app['tactician.extractor'] = $this->app->share(function($app) {
+
+    		return $app->make($this->config('extractor'));
+
+    	});    	
+    }
+
+    /**
+     * Register bindings for the Method Name Inflector.
+     * 
+     * @return void
+     * 
+     */
+    protected function registerInflector()
+    {
+    	$this->app['tactician.inflector'] = $this->app->share(function($app) {
+
+    		return $app->make($this->config('inflector'));
+
+    	});    	
+    }
+
+    /**
+     * Register bindings for the Handler Locator.
+     * 
+     * @return void
+     * 
+     */
+    protected function registerLocator()
+    {
+    	$this->app['tactician.locator'] = $this->app->share(function($app) {
+
+    		$command_namespace = $this->config('command_namespace');
+    		$handler_namespace = $this->config('handler_namespace');
+    		$locator           = $this->config('locator');
+
+    		return $app->make($locator, [$this->app, $command_namespace, $handler_namespace]);
+    	});
+    }
+
+
+    /**
+     * Register bindings for all the middleware.
+     * 
+     * @return void
+     * 
+     */
+    protected function registerMiddleware()
+    {
+    	
+    }
+
+    /**
+     * Helper to get the config values
+     *
+     * @param  string $key
+     * 
+     * @return string
+     * 
+     */
+    protected function config($key, $default = null)
+    {
+        return config('tactician.' . $key, $default);
     }
 }
