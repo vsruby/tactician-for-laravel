@@ -8,6 +8,6 @@ class TestCommand
 
 	function __construct($data)
 	{
-		$this->data;
+		$this->data = $data;
 	}
 }
