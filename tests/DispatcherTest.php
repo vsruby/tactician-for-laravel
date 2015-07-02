@@ -76,7 +76,7 @@ class DispatcherTest extends PHPUnit_Framework_TestCase
 		$collection = new Collection(['data' => 'foo']);
 		$command    = $this->dispatcher->marshal(TestCommand::class, $collection);
 
-		$this->assertEquals(get_class($command), TestCommand::class);
+		$this->assertInstanceOf(TestCommand::class, $command);
 		$this->assertEquals($command->data, 'foo');
 	}
 
@@ -90,7 +90,7 @@ class DispatcherTest extends PHPUnit_Framework_TestCase
 		$collection = new Collection(['data' => 'foo']);
 		$command    = $this->dispatcher->marshal(TestCommand::class, $collection, ['data' => 'bar']);
 
-		$this->assertEquals(get_class($command), TestCommand::class);		
+		$this->assertInstanceOf(TestCommand::class, $command);		
 		$this->assertEquals($command->data, 'bar');
 		$this->assertNotEquals($command->data, 'foo');
 	}
@@ -104,7 +104,7 @@ class DispatcherTest extends PHPUnit_Framework_TestCase
 	{
 		$command    = $this->dispatcher->marshalFromArray(TestCommand::class, ['data' => 'foo']);
 
-		$this->assertEquals(get_class($command), TestCommand::class);
+		$this->assertInstanceOf(TestCommand::class, $command);
 		$this->assertEquals($command->data, 'foo');
 	}
 
@@ -118,7 +118,7 @@ class DispatcherTest extends PHPUnit_Framework_TestCase
 		$collection = new Collection(['foo' => 'bar']);
 		$command    = $this->dispatcher->marshal(TestWithDefaultCommand::class, $collection);
 
-		$this->assertEquals(get_class($command), TestWithDefaultCommand::class);
+		$this->assertInstanceOf(TestWithDefaultCommand::class, $command);
 		$this->assertNull($command->data);
 	}
 
@@ -132,7 +132,7 @@ class DispatcherTest extends PHPUnit_Framework_TestCase
 		$collection = new Collection(['data' => 'foo', 'bar' => 'baz']);
 		$command    = $this->dispatcher->marshal(TestCommand::class, $collection);
 
-		$this->assertEquals(get_class($command), TestCommand::class);
+		$this->assertInstanceOf(TestCommand::class, $command);
 		$this->assertEquals($command->data, 'foo');
 	}
 
