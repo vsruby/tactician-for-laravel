@@ -60,7 +60,7 @@ class TacticianServiceProvider extends ServiceProvider
     	}
 
     	$this->app['League\Tactician\Handler\CommandHandlerMiddleware'] = function($app) {
-    		return $app['tactician.handler']
+    		return $app['tactician.handler'];
     	}
 
     	$this->app['League\Tactician\Handler\CommandNameExtractor\CommandNameExtractor'] = function($app) {
