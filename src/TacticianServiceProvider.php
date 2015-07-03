@@ -23,7 +23,7 @@ class TacticianServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../config/config.php' => config_path('tactician.php')
-        ], 'config');
+        ]);
 
         $this->bootBindings();
     }
