@@ -57,27 +57,27 @@ class TacticianServiceProvider extends ServiceProvider
     {
     	$this->app['League\Tactician\CommandBus'] = function($app) {
     		return $app['tactician.commandbus'];
-    	}
+    	};
 
     	$this->app['League\Tactician\Handler\CommandHandlerMiddleware'] = function($app) {
     		return $app['tactician.handler'];
-    	}
+    	};
 
     	$this->app['League\Tactician\Handler\CommandNameExtractor\CommandNameExtractor'] = function($app) {
     		return $app['tactician.extractor'];
-    	}
+    	};
 
     	$this->app['League\Tactician\Handler\MethodNameInflector\MethodNameInflector'] = function($app) {
     		return $app['tactician.inflector'];
-    	}
+    	};
 
     	$this->app['League\Tactician\Handler\Locator\HandlerLocator'] = function($app) {
     		return $app['tactician.locator'];
-    	}
+    	};
 
     	$this->app['VinceRuby\Tactician\Contracts\Bus\Dispatcher'] = function($app) {
     		return $app['tactician.dispatcher'];
-    	}
+    	};
     }
 
     /**
