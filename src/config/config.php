@@ -68,4 +68,5 @@ return [
 		//App/Path/To/Your/Middleware,
 		//or Middleware::class
 	]
+
 ];

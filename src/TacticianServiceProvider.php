@@ -8,7 +8,7 @@ use Illuminate\Support\ServiceProvider;
 use League\Tactician\CommandBus;
 use League\Tactician\Handler\CommandHandlerMiddleware;
 
-use VinceRuby\Tactician\Contracts\Bus\Dispatcher;
+use VinceRuby\Tactician\Dispatcher;
 use VinceRuby\Tactician\Locator;
 
 class TacticianServiceProvider extends ServiceProvider
@@ -22,7 +22,7 @@ class TacticianServiceProvider extends ServiceProvider
 	public function boot()
     {
         $this->publishes([
-            __DIR__.'/../config/config.php' => config_path('tactician.php')
+            __DIR__.'/config/config.php' => config_path('tactician.php')
         ]);
 
         $this->bootBindings();
@@ -36,7 +36,7 @@ class TacticianServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'tactician');
+        $this->mergeConfigFrom(__DIR__ . '/config/config.php', 'tactician');
 
         $this->registerLocator();
         $this->registerExtractor();
@@ -125,7 +125,7 @@ class TacticianServiceProvider extends ServiceProvider
     {
     	$this->app['tactician.dispatcher'] = $this->app->share(function($app) {
 
-    		return new Dispatcher($app['tactician.middleware']);
+    		return new Dispatcher($app['tactician.commandbus']);
 
     	});
     }
