@@ -66,7 +66,7 @@ return [
 	*/
 	'middleware' => [
 		//App/Path/To/Your/Middleware,
-		//or Middleware::class
+		//or App/Path/To/Your/Middleware::class
 	]
 
 ];
