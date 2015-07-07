@@ -8,15 +8,4 @@
 Laravel 5+ wrapper for Tactician library
 [https://github.com/thephpleague/tactician/](https://github.com/thephpleague/tactician/)
 
-## Install
-
-```
-composer require vinceruby/tactician-for-laravel
-```
-
-Add ```VinceRuby\Tactician\TacticianServiceProvider``` to your app.php
-
-Run this in the command line:
-```
-php artisan vendor:publish
-```
+See the [WIKI](https://github.com/vsruby91/tactician-for-laravel/wiki) for documentation.
