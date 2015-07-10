@@ -193,7 +193,11 @@ class TacticianServiceProvider extends ServiceProvider
 
 	    	$resolved   = array_map(function($name) {
 
-	    		return new $name();
+                if (is_string($name)) {
+                    return $this->app->make($name);
+                }
+                
+                return $name;
 
 	    	}, $middleware);
 
