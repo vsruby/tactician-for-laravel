@@ -1,5 +1,7 @@
 # Tactician-For-Laravel
 
+## For newer releases go to [gearhub/tactician-for-laravel](https://github.com/gearhub/tactician-for-laravel)
+
 [![Build Status](http://img.shields.io/travis/vsruby91/tactician-for-laravel/master.svg?style=flat-square)](https://travis-ci.org/vsruby91/tactician-for-laravel)
 [![Packagist Version](https://img.shields.io/packagist/v/vinceruby/tactician-for-laravel.svg?style=flat-square)](https://packagist.org/packages/vinceruby/tactician-for-laravel)
 [![Total Downloads](https://img.shields.io/packagist/dt/vinceruby/tactician-for-laravel.svg?style=flat-square)](https://packagist.org/packages/vinceruby/tactician-for-laravel)
